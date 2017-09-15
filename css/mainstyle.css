@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Condensed');
+
+body {
+    padding-top: 50px;
+}
+h1 {
+
+    margin: 30px;
+    font-weight: bold;
+    font-size: 24px;
+}
+strong{
+    color: #0C9DFF;
+}
+body, p{
+    font-family: 'Open Sans', sans-serif;
+}
+a {
+    color: inherit;
+}
+dl {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0
+}
+dt {
+    float: left;
+    width: 50%;
+    /* adjust the width; make sure the total of both is 100% */
+    padding: 0;
+    margin: 0
+}
+dd {
+    float: left;
+    width: 50%;
+    /* adjust the width; make sure the total of both is 100% */
+    padding: 0;
+    margin: 0
+}
+.loanMonthly{
+    font-size: 4em;
+    font-family: 'Open Sans', sans-serif;
+    margin-bottom: 5px;
+}
+#custom-handle {
+    position: absolute;
+    z-index: 1;
+    width: 90px;
+    height: 1.6em;
+    cursor: default;
+    border-radius: 10px;
+    outline: none;
+    top: -17px;
+    margin-left: -12px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2em;
+    background:#0C9DFF;
+    color: #FFF;
+    border: 1px solid rgba(12,157,255,0.3);
+}
+.ui-slider-range { height: 3px; width: 70%;
+    margin: auto;
+ }
+.amount{
+    font-size: 5em;
+
+}
+.buttons{
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+.active-month{
+    border: 2px solid rgba(0,0,0,0.4);
+}
+.btn{
+    background: #0C9DFF;;
+}
+#slider {display:inline-block;width:80%;}
+.fa{
+    color: #0C9DFF;
+}
+.icon-text{
+    padding: 10px;
+    color:#778899;
+    font-family: 'Open Sans', sans-serif;
+
+}
+#collapseExample{
+    padding-top: 20px;
+}
+.padding-info{
+
+    padding-top:20px;
+}
+.btn-group, .btn-group-vertical{
+
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .btn-responsive {
+        padding:2px 4px;
+        font-size:80%;
+        line-height: 1;
+        border-radius:3px;
+    }
+    .btn-group-xs{
+        max-width: 360px;
+    }
+
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    .btn-responsive {
+        padding:4px 9px;
+        font-size:90%;
+        line-height: 1.2;
+    }
+}
+
+
+@media (min-width: 320px) and (max-width: 768px) {
+    .btn-responsive {
+        line-height: 1;
+    }
+    .loanMonthly{
+        font-size: 2em;
+    }
+    .btn-group-sm>.btn, .btn-sm{
+        font-size: 0.5em;
+    }
+    .btn-group{
+        width: 100%;
+    }
+
+    .table{
+        max-width: 100%;
+        font-size: 60%;
+
+    }
+    .collapse{
+        padding:0px;
+    }
+    .icon-text{
+        font-size: 0.6em;
+    }
+
+}

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Loan Calculator">
+    <meta name="author" content="David Camoin">
+    <title>David Camoin - Loan calculator</title>
+
+    <!-- Jquery and Jquery UI scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://use.fontawesome.com/3c32b24ee4.js"></script>
+    <script src="js/jquery-ui-slider-pips.js"></script>
+
+    <!-- CSS styles -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/mainstyle.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">Loan Calculator</a>
+
+        </div>
+    </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Heading, Totals and Slider -->
+    <div class="row">
+        <div class="col-lg-12 col-12 text-center component-background">
+            <h1> Loan and credit that's more affordable </h1>
+            <p class="loanMonthly"><span id="total"></span></p>
+            <p class="totalprice">Total cost of <span id="total1"></span> </p>
+            <div id="slider" class="ui-slider-range text-center">
+                <div id="custom-handle" class="ui-slider-handle text-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="row">
+        <div class="col-lg-12 text-center buttons">
+            <div class="btn-group btn-group-lg">
+                <button type="button" class="btn btn-primary btn-lg  month active-month selected-month btn-responsive" id='3months' value="3">3 Months</button>
+                <button type="button" class="btn btn-primary btn-lg  month btn-responsive" id='6months' value="6">6 Months</button>
+                <button type="button" class="btn btn-primary btn-lg  month btn-responsive" id='12months' value="12">12 Months</button>
+                <button type="button" class="btn btn-primary btn-lg  month btn-responsive" id='24months' value="24">24 Months</button>
+                <button type="button" class="btn btn-primary btn-lg  month btn-responsive" id='60months' value="60" disabled="disabled">60 Months</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details  link and collapse -->
+    <div class="row">
+        <div class="col-lg-12 padding-info">
+            <a id="collapse" class="" data-toggle="collapse" href="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
+                <i id="icon1" class="fa fa-arrow-circle-right fa-3x" aria-hidden="true"><span class="icon-text">Details</span></i>
+            </a>
+            <div class="collapse col-lg-12" id="collapseExample1">
+                <div class="padding-info">
+                    <dl>
+                        <dt>Monthly cost</dt>
+                        <dd id="monthly-total-info"></dd>
+                        <dt>Total fees</dt>
+                        <dd id="total-fees-info">White cold drink</dd>
+                        <dt>Total to pay</dt>
+                        <dd id="total-topay-info">White cold drink</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Plan link and Collapse -->
+    <div class="row">
+        <div class="col-lg-12 padding-info">
+            <a id="collapse" class="" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <i id="icon1" class="fa fa-arrow-circle-right fa-3x " aria-hidden="true"><span class="icon-text">Payment plan</span></i>
+            </a>
+            <div class="collapse col-lg-12" id="collapseExample">
+                <table id="thetable" class="table table-striped">
+                    <tr>
+                        <th>Month</th>
+                        <th>Capital</th>
+                        <th>Monthly Installment</th>
+                        <th>Fees</th>
+                        <th>Interest</th>
+                    </tr>
+                    <tr>
+                        <td>Middle row, will be deleted</td>
+                        <td>You will not see this</td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/popper/popper.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+var v = [100, 200, 300, 400, 500, 1000, 1500, 2000, 3000, 4000, 5000]; // v = Actual values for the slider.
+
+$(document).ready(function() {
+
+    var handle = $( "#custom-handle" );
+
+    // Slider
+    $("#slider").slider(
+        {
+            max:v.length -1,
+            step: 1,
+            values: 11,
+            value:0,
+            create: function() {
+                handle.text('€' + v[0]);
+                calculatePrice(parseFloat(v[0]));
+
+            },
+            slide: function( event, ui ) {
+                handle.text('€' + v[ui.value]);
+                if(v[ui.value] < 2000){
+                    $("#60months").attr("disabled",true);
+                    $('.month').removeClass('selected-month');
+                    $(".month").removeClass("active-month");
+                    $('#3months').addClass('selected-month');
+                    $("#3months").addClass("active-month");
+                }
+                else{
+                    $("#60months").attr("disabled",false);
+                }
+
+                calculatePrice(parseFloat(v[ui.value]));
+            }
+        }
+    ).slider("pips", {
+        first:"label",
+        last:"label",
+        rest:false,
+        prefix:'€',
+        labels: v
+    });
+});
+
+function calculatePrice(val){
+    var r = 1;// While loop start.
+    var month = $(".selected-month").attr('value'); // Month value that is selected.
+    var I = 5.91/ 100 / 12; // Monthly interest rate.
+    var monthlyFee = calculateFee(val);
+    var interest = interestMonthly(val);
+    var M; // Monthly payment.
+    var P = val; // Principle / Initial amount borrowed.
+
+    // Monthly payment
+    M = monthlyPayment(P, month, I);
+    var monthly = parseFloat(M + monthlyFee);
+    var total = parseFloat(monthly.toFixed(2));
+
+    if (total < monthly){
+        total = (parseFloat(monthly + 0.01)).toFixed(2);
+    }
+
+    $("#total").html('<strong>'+ total + '</strong>' + ' €/Month');
+    $("#monthly-total-info").html('<strong>€ </strong>' + total);
+    // End of Monthly payment
+
+    // Start of Payment plan and details.
+    var capital = val; // Start Captital is the Value.
+
+    // Total Fees calculation.
+    var totalfees = month*monthlyFee;
+    $("#total-fees-info").html('<strong>€ </strong>' + totalfees);
+
+    // Total payable calculation and table creation. First month calculated then while loop then last month.
+    var M1 = parseFloat(M + monthlyFee);
+    var total12 = M1*(month -1);
+    $('#thetable tr').not(':first').not(':last').remove();
+    var html = '';
+    html += '<tr><td>' + 1 + '</td><td>' + capital+ '</td><td>' + total + '</td><td>'+ monthlyFee+ '</td><td>'+ interest.toFixed(4) + '</td></tr>';
+    while(r < month){
+
+        var interest = interestMonthly(capital);
+
+        if(parseInt(r) != 1){
+
+            var htm = '';
+            htm += '<tr><td>' + parseInt(r) + '</td><td>' + capital.toFixed(2)+ '</td><td>' + total + '</td><td>'+ monthlyFee+ '</td><td>'+ interest.toFixed(4) + '</td></tr>';
+            $('#thetable tr').eq(r-2).after(htm);
+
+        }
+        capital = capital.toFixed(2) - (M1.toFixed(2) - interest - monthlyFee);
+        r++;
+    }
+
+    $('#thetable tr').first(html).after(html);
+    var interest = interestMonthly(capital);
+    var lastPayment = capital + interest + monthlyFee;
+    total12 = total12 + capital + interest + monthlyFee;
+    var total1= (total*month).toFixed(2);
+    $("#total1").html('€'+total1);
+    $("#total-topay-info").html('<strong>€ </strong>' + total1);
+    $('#thetable tr').last().remove();
+    var html = '';
+    html += '<tr><td>' + month + '</td><td>' + capital.toFixed(2) + '</td><td>' + lastPayment.toFixed(2) + '</td><td>'+ monthlyFee+ '</td><td>'+ interest.toFixed(4)+ '</td></tr>';
+    $('#thetable tr').last().after(html);
+}
+
+
+// Month click function to add or remove class.
+$('.month').on('click',function(event) {
+
+    $('.month').removeClass('selected-month');
+    $(this).addClass('selected-month');
+    $(".month").removeClass("active-month");
+    $(this).addClass("active-month");
+
+    var val1 = $('#slider').slider("option", "value");
+    var val = v[val1];
+    calculatePrice(val);
+});
+
+// Calculating fee + if fee goes over max max=fee.
+function calculateFee(val){
+    var fee;
+
+    if ($(".selected-month").attr('value') == 3){
+        fee = val*0.05;
+
+        if (fee >= 91.50){
+            fee = 91.50;
+        }
+    }
+    else if ($(".selected-month").attr('value') == 6){
+        fee = val*0.03;
+
+        if (fee >= 43.50){
+            fee = 43.50;
+        }
+    }
+    else if ($(".selected-month").attr('value') == 12){
+        fee = val*0.0222;
+
+        if (fee >= 19.50){
+            fee = 19.50;
+        }
+    }
+    else if ($(".selected-month").attr('value') == 24){
+        fee = val*0.015;
+
+        if (fee >= 7.47){
+            fee = 7.47
+        }
+    }
+    else if ($(".selected-month").attr('value') == 60){
+        fee = val*0.01;
+
+        if (fee >= 37){
+            fee = 37
+        }
+    }
+
+    return fee;
+}
+
+// Interest monthly function.
+function interestMonthly(capital){
+
+        var interest = parseFloat(capital*(5.91/ 100 / 12));
+    return interest;
+}
+
+// PMT CALC.
+function monthlyPayment(p, n, i) {
+        return p * i * (Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+    }
+
+// Had problems with bootstrap 4 and sm and xs not triggering. So used media size to switch out classes.
+(function($) {
+    /*
+     * We need to turn it into a function.
+     * To apply the changes both on document ready and when we resize the browser.
+     */
+    function mediaSize() {
+        /* Set the matchMedia */
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            $('.btn-group-lg').addClass('btn-group-sm');
+            $('.btn-group-lg').removeClass('btn-group-lg');
+
+
+        } else {
+            /* Reset for CSS changes – Still need a better way to do this! */
+            $('.btn-group-sm').addClass('btn-group-lg');
+            $('.btn-group-sm').removeClass('btn-group-sm');
+        }
+    };
+    /* Call the function */
+    mediaSize();
+    /* Attach the function to the resize event listener */
+    window.addEventListener('resize', mediaSize, false);
+})(jQuery);
+
+</script>
+</body>
+
+</html>
