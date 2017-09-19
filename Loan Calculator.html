@@ -14,13 +14,15 @@
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://use.fontawesome.com/3c32b24ee4.js"></script>
-    <script src="js/jquery-ui-slider-pips.js"></script>
-
+    <script src="js/nouislider.js"></script>
+    <script src="js/wNumb.js"></script>
     <!-- CSS styles -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/nouislider.css">
     <link href="css/mainstyle.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
+
+
 
 </head>
 
@@ -44,8 +46,9 @@
             <h1> Loan and credit that's more affordable </h1>
             <p class="loanMonthly"><span id="total"></span></p>
             <p class="totalprice">Total cost of <span id="total1"></span> </p>
-            <div id="slider" class="ui-slider-range text-center">
-                <div id="custom-handle" class="ui-slider-handle text-center"></div>
+
+            <div id='container'>
+                <div id='slider-step'></div>
             </div>
         </div>
     </div>
@@ -116,48 +119,57 @@
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 
-var v = [100, 200, 300, 400, 500, 1000, 1500, 2000, 3000, 4000, 5000]; // v = Actual values for the slider.
-
 $(document).ready(function() {
-
-    var handle = $( "#custom-handle" );
-
-    // Slider
-    $("#slider").slider(
-        {
-            max:v.length -1,
-            step: 1,
-            values: 11,
-            value:0,
-            create: function() {
-                handle.text('€' + v[0]);
-                calculatePrice(parseFloat(v[0]));
-
-            },
-            slide: function( event, ui ) {
-                handle.text('€' + v[ui.value]);
-                if(v[ui.value] < 2000){
-                    $("#60months").attr("disabled",true);
-                    $('.month').removeClass('selected-month');
-                    $(".month").removeClass("active-month");
-                    $('#3months').addClass('selected-month');
-                    $("#3months").addClass("active-month");
-                }
-                else{
-                    $("#60months").attr("disabled",false);
-                }
-
-                calculatePrice(parseFloat(v[ui.value]));
-            }
+    var label=['€100','€5000'];
+    var stepSlider = document.getElementById('slider-step');
+    noUiSlider.create(stepSlider, {
+        start: [ 100 ],
+        tooltips:wNumb({prefix:"€"}),
+        snap:true,
+        connect:[true, false],
+        range: {
+            'min': 100,
+            '10%': 200,
+            '20%': 300,
+            '30%': 400,
+            '40%': 500,
+            '50%': 1000,
+            '60': 1500,
+            '70': 2000,
+            '80': 3000,
+            '90': 4000,
+            'max': 5000
+        },
+        pips: {
+            mode: 'positions',
+            values: [0,100],
+            density: 4,
+            stepped: true,
+            format: wNumb({
+                prefix: '€'
+            })
         }
-    ).slider("pips", {
-        first:"label",
-        last:"label",
-        rest:false,
-        prefix:'€',
-        labels: v
     });
-});
+
+
+    var stepSliderValueElement = document.getElementById('slider-step-value');
+    var value = 100;
+    stepSlider.noUiSlider.on('update', function( values, handle ) {
+        if(values[handle] < 2000){
+
+            $("#60months").attr("disabled",true);
+            $('.month').removeClass('selected-month');
+            $(".month").removeClass("active-month");
+            $('#3months').addClass('selected-month');
+            $("#3months").addClass("active-month");
+        }
+        else{
+            $("#60months").attr("disabled",false);
+        }
+        value = values[handle];
+        calculatePrice(parseFloat(values[handle]));
+    });
+
 
 function calculatePrice(val){
     var r = 1;// While loop start.
@@ -230,10 +242,7 @@ $('.month').on('click',function(event) {
     $(this).addClass('selected-month');
     $(".month").removeClass("active-month");
     $(this).addClass("active-month");
-
-    var val1 = $('#slider').slider("option", "value");
-    var val = v[val1];
-    calculatePrice(val);
+    calculatePrice(value);
 });
 
 // Calculating fee + if fee goes over max max=fee.
@@ -310,12 +319,9 @@ function monthlyPayment(p, n, i) {
             $('.btn-group-sm').removeClass('btn-group-sm');
         }
     };
-    /* Call the function */
-    mediaSize();
-    /* Attach the function to the resize event listener */
-    window.addEventListener('resize', mediaSize, false);
-})(jQuery);
 
+});
+});
 </script>
 </body>
 

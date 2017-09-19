@@ -43,25 +43,7 @@ dd {
     font-family: 'Open Sans', sans-serif;
     margin-bottom: 5px;
 }
-#custom-handle {
-    position: absolute;
-    z-index: 1;
-    width: 90px;
-    height: 1.6em;
-    cursor: default;
-    border-radius: 10px;
-    outline: none;
-    top: -17px;
-    margin-left: -12px;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.2em;
-    background:#0C9DFF;
-    color: #FFF;
-    border: 1px solid rgba(12,157,255,0.3);
-}
-.ui-slider-range { height: 3px; width: 70%;
-    margin: auto;
- }
+
 .amount{
     font-size: 5em;
 
@@ -74,9 +56,11 @@ dd {
     border: 2px solid rgba(0,0,0,0.4);
 }
 .btn{
-    background: #0C9DFF;;
+    background: #0C9DFF;
 }
-#slider {display:inline-block;width:80%;}
+#container {
+    padding: 20px;
+}
 .fa{
     color: #0C9DFF;
 }
@@ -104,6 +88,7 @@ dd {
         font-size:80%;
         line-height: 1;
         border-radius:3px;
+        margin: 10px;
     }
     .btn-group-xs{
         max-width: 360px;
@@ -118,7 +103,6 @@ dd {
         line-height: 1.2;
     }
 }
-
 
 @media (min-width: 320px) and (max-width: 768px) {
     .btn-responsive {
@@ -146,4 +130,8 @@ dd {
         font-size: 0.6em;
     }
 
+}
+
+#container{
+    margin-top: 25px;
 }
